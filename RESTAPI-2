@@ -47,10 +47,31 @@ data.push(newobj)
 res.status(201).json(data)
 })
 
-//update an object
-app.put('/data/:id',(req,res)=>{
-   
-})
+
+// update an object by ID
+app.put('/data/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const updatedObject = req.body;
+  const index = data.findIndex(obj => obj.id === id);
+  if (index !== -1) {
+    data[index] = { ...data[index], ...updatedObject };
+    res.json(data[index]);
+  } else {
+    res.status(404).json({ error: 'Object not found' });
+  }
+});
+
+// delete an object 
+app.delete('/objects/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  const index = data.findIndex(obj => obj.id === id);
+  if (index !== -1) {
+    const deletedObject = data.splice(index, 1);
+    res.json(deletedObject[0]);
+  } else {
+    res.status(404).json({ error: 'Object not found' });
+  }
+});
 
 app.listen(8000,()=>{
     console.log('server started')
